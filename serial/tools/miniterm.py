@@ -701,7 +701,7 @@ class Miniterm(object):
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # default args can be used to override when calling main() from an other script
 # e.g to create a miniterm-my-device.py
-def main(default_port=None, default_baudrate=9600, default_rts=None, default_dtr=None):
+def main(default_port=None, default_baudrate=9600, default_rts=None, default_dtr=None, default_bytesize=serial.EIGHTBITS):
     """Command line tool, entry point"""
 
     import argparse
@@ -724,6 +724,13 @@ def main(default_port=None, default_baudrate=9600, default_rts=None, default_dtr
 
     group = parser.add_argument_group("port settings")
 
+    group.add_argument(
+        "--bytesize",
+        choices=[5, 6, 7, 8],
+        type=int,
+        help="set bytesize, one of {5 6 7 8}, default: 8",
+        default=default_bytesize)
+    
     group.add_argument(
         "--parity",
         choices=['N', 'E', 'O', 'S', 'M'],
@@ -859,6 +866,7 @@ def main(default_port=None, default_baudrate=9600, default_rts=None, default_dtr
                 args.port,
                 args.baudrate,
                 parity=args.parity,
+                bytesize=args.bytesize,
                 rtscts=args.rtscts,
                 xonxoff=args.xonxoff,
                 do_not_open=True)
